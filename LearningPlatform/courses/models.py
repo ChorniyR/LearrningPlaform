@@ -11,4 +11,4 @@ class Course(models.Model):
     end_date = models.DateField()
     creating_date = models.DateTimeField(auto_now_add=True)
     teacher = models.ForeignKey('Teacher', on_delete=models.SET_NULL, null=True)
-    
+
