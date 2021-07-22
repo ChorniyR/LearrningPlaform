@@ -6,6 +6,7 @@ from rest_framework.response import Response
 
 from .models import Course
 from .serializers import CoursesSerializer
+from .permissions import IsAuthorOrReadOnly
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
