@@ -43,5 +43,20 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
+class PasswordResetSerializer(serializers.Serializer):
+    model = User
 
+    current_password = serializers.CharField(write_only=True,
+                                             required=True, )
+    new_password = serializers.CharField(write_only=True,
+                                         required=True,
+                                         validators=[validate_password])
+    new_password_repeated = serializers.CharField(write_only=True,
+                                                  required=True)
+    email = serializers.CharField(write_only=True, required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['new_password_repeated']:
+            raise serializers.ValidationError("Passwords don't match")
+        return attrs
 
