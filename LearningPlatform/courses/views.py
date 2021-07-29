@@ -13,5 +13,8 @@ class CoursesViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-    permission_classes = [permissions.IsAuthenticated, IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, IsAuthorOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        if request.user.has_perm():
+            pass

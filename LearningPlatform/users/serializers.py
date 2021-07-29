@@ -20,7 +20,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'first_name': {'required': True},
             'last_name': {'required': True},
-            'username': {'required': True},
+            'username': {'required': True, 'validators': [UniqueValidator(queryset=User.objects.all())]},
             'email': {'required': True},
         }
 
