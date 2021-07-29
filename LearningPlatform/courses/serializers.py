@@ -14,4 +14,3 @@ class CoursesSerializer(serializers.ModelSerializer):
         if attrs['start_date'] > attrs['end_date']:
             raise serializers.ValidationError("Start date should be as early as end_date")
         return attrs
-
