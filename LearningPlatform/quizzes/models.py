@@ -7,6 +7,7 @@ class Test(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='tests')
     description = models.CharField(max_length=1024)
     passed = models.BooleanField()
+    step = models.IntegerField(null=True)  # presents which step of course Test occupies
 
     @property
     def is_passed(self):
@@ -61,7 +62,7 @@ class Task(models.Model):
 class TaskCase(models.Model):
     definition = models.CharField(max_length=1024)
     is_required = models.BooleanField()
-    selected = models.BooleanField()
+    selected = models.BooleanField(null=True)
     task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='cases')
 
     def __str__(self):

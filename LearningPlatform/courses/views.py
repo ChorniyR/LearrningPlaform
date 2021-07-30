@@ -4,7 +4,7 @@ from rest_framework import permissions
 
 from .models import Course
 from .serializers import CoursesSerializer
-from .permissions import IsAuthorOrReadOnly
+from .permissions import IsAuthorOrReadOnly, StuffCreatePermission
 
 
 class CoursesViewSet(viewsets.ModelViewSet):
@@ -13,8 +13,5 @@ class CoursesViewSet(viewsets.ModelViewSet):
     """
     queryset = Course.objects.all()
     serializer_class = CoursesSerializer
-    permission_classes = [permissions.IsAuthenticated, permissions.IsAdminUser, IsAuthorOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated, StuffCreatePermission, IsAuthorOrReadOnly]
 
-    def create(self, request, *args, **kwargs):
-        if request.user.has_perm():
-            pass
