@@ -52,6 +52,7 @@ class Task(models.Model):
         for case in self.cases.all():
             if case.is_required != case.selected:
                 return False
+        return True
 
     def __str__(self):
         return self.definition
