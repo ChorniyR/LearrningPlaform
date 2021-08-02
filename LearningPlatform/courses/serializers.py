@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Course
+from .models import Course, CourseUser
 
 
 class CoursesSerializer(serializers.ModelSerializer):
@@ -14,3 +14,15 @@ class CoursesSerializer(serializers.ModelSerializer):
         if attrs['start_date'] > attrs['end_date']:
             raise serializers.ValidationError("Start date should be as early as end_date")
         return attrs
+
+
+class CourseUserSerializer(serializers.ModelSerializer):
+    course = CoursesSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = CourseUser
+        fields = ['course', 'passed', 'user']
+        extra_kwargs = {
+            'user': {'read_only': True},
+            'passed': {'read_only': True},
+        }
