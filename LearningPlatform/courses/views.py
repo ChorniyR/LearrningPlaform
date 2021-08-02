@@ -31,7 +31,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
         if pk:
             course = Course.objects.get(id=pk)
             user = request.user
-            instance = CourseUser.objects.get(user=request.user)
+            instance = CourseUser.objects.filter(user=request.user)
 
             if instance:
                 instance.course.add(course)
