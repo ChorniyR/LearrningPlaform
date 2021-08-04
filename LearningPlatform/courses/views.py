@@ -31,13 +31,13 @@ class CoursesViewSet(viewsets.ModelViewSet):
         if pk:
             course = Course.objects.get(id=pk)
             user = request.user
-            instance = CourseUser.objects.filter(user=request.user)
-
-            if instance:
-                instance.course.add(course)
-            else:
+            try:
+                instance = CourseUser.objects.get(user=request.user)
+            except CourseUser.DoesNotExist:
                 instance = CourseUser.objects.create()
                 instance.user.add(user)
+                instance.course.add(course)
+            else:
                 instance.course.add(course)
 
             serializer = CourseUserSerializer(instance)
