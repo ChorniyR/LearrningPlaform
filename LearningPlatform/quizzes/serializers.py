@@ -3,31 +3,23 @@ from rest_framework import serializers
 from .models import Test, Task, TaskCase
 
 
-class TestSerializer(serializers.ModelSerializer):
-    tasks = serializers.HyperlinkedRelatedField(
-        many=True,
-        read_only=True,
-        view_name='tasks-detail'
-    )
-
+class TaskCaseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Test
-        fields = ['description', 'passed', 'step', 'tasks']
+        model = TaskCase
+        fields = ['definition', 'selected']
 
 
 class TaskSerializer(serializers.ModelSerializer):
-    cases = serializers.HyperlinkedRelatedField(
-        many=True,
-        read_only=True,
-        view_name='cases-detail'
-    )
+    cases = TaskCaseSerializer(many=True, read_only=True)
 
     class Meta:
         model = Task
         fields = ['definition', 'cases', 'passed']
 
 
-class TaskCaseSerializer(serializers.ModelSerializer):
+class TestSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True, read_only=True)
+
     class Meta:
-        model = TaskCase
-        fields = ['definition', 'selected']
+        model = Test
+        fields = ['description', 'passed', 'step', 'tasks']

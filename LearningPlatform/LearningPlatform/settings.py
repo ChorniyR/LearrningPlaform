@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'courses.apps.CoursesConfig',
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
+    'lessons.apps.LessonsConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',

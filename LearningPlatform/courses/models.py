@@ -8,7 +8,7 @@ class Course(models.Model):
     details = models.TextField()
     start_date = models.DateField()
     end_date = models.DateField()
-    creating_date = models.DateTimeField(auto_now_add=True)
+    creating_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):

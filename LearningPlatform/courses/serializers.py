@@ -8,7 +8,7 @@ class CoursesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Course
-        fields = ['name', 'description', 'details', 'start_date', 'end_date', 'creating_date', 'author']
+        fields = ['name', 'description', 'details', 'start_date', 'end_date', 'creating_at', 'author']
 
     def validate(self, attrs):
         if attrs['start_date'] > attrs['end_date']:

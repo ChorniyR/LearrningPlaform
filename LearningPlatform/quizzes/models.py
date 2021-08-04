@@ -2,12 +2,13 @@ from django.db import models
 
 from courses.models import Course
 
+from lessons.models import Step
+
 
 class Test(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='tests')
     description = models.CharField(max_length=1024)
     passed = models.BooleanField()
-    step = models.IntegerField(null=True)  # presents which step of course Test occupies
+    step = models.OneToOneField(Step, on_delete=models.CASCADE, related_name='test')
 
     @property
     def is_passed(self):
