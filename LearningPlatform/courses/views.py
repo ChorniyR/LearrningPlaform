@@ -27,7 +27,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
 
     @action(methods=['POST'], detail=True, serializer_class=CourseUserSerializer,
             permission_classes=[permissions.IsAuthenticated])
-    def add(self, request, pk=None):
+    def enroll(self, request, pk=None):
         if pk:
             course = Course.objects.get(id=pk)
             user = request.user

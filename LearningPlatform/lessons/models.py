@@ -30,4 +30,5 @@ class StepUser(models.Model):
     score = models.IntegerField()
     user = models.ManyToManyField(User, related_name='steps')
     step = models.ManyToManyField(Step)
+    feedback = models.CharField(max_length=1024, default='no feedback')
 
