@@ -2,4 +2,4 @@ db.sqlite3
 .idea
 .vscode
 launch.json
-
+__pycache__
