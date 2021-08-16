@@ -32,17 +32,12 @@ class AnswerSerializer(serializers.Serializer):
     step = StepSerializer(read_only=True)
 
     def update(self, instance, validated_data):
-        pass
+        return super().update(instance, validated_data)
 
     def create(self, validated_data):
-        if validated_data['test'].is_passed():
-            step_user = StepUser.objects.create(passed=True,
-                                                score=36,
-                                                user=self.context['request'].user,
-                                                step=validated_data['step'],
-                                                feedback="You are good!!")
+        return super().create(validated_data)
 
-
+    
 
 
 
