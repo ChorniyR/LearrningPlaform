@@ -42,9 +42,5 @@ class CourseUser(models.Model):
             course_user.course.add(course)
         return course_user
 
-    def enroll_on_course(self, user, course):
-        object_ = self.objects.create(user=user, course=course)
-        return object_
-
     def __str__(self):
         return f"{self.user.username}'s subscribed on: {self.course.name}"
