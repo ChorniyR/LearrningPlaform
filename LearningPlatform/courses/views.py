@@ -1,7 +1,7 @@
 from model_bakery.baker import make
 from rest_framework import viewsets, status
 from rest_framework import permissions
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Course, CourseUser
@@ -36,7 +36,7 @@ class CoursesViewSet(viewsets.ModelViewSet):
         """
         course = Course.objects.get(id=pk)
         user = request.user
-        
+
         course_user = CourseUser.add_course_to_user(user, course)
         serializer = CourseUserSerializer(course_user)
         return Response(serializer.data)

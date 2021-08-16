@@ -10,26 +10,24 @@ class Test(models.Model):
     passed = models.BooleanField()
     step = models.OneToOneField(Step, on_delete=models.CASCADE, related_name='test')
 
-    @property
-    def is_passed(self):
+    def is_passed(self, tasks):
         """
         :returns True If all included task are passed,
         also False if one task is not passed and if tasks queryset is empty.
         """
-        if self.tasks.all():
-            for task in self.tasks.all():
+        if self.tasks:
+            for task in tasks:
                 if not task.passed:
                     return False
             return True
         return False
 
-    @property
-    def passed_count(self):
+    def passed_count(self, tasks):
         """
-        :return: quantity of passed included tasks.
+        :return: quantity of passed included in current test tasks.
         """
         count = 0
-        for task in self.tasks.all():
+        for task in tasks:
             if task.passed:
                 count += 1
         return count
@@ -49,9 +47,8 @@ class Task(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='tasks')
     passed = models.BooleanField()
 
-    @property
-    def is_passed(self):
-        for case in self.cases.all():
+    def is_passed(self, cases):
+        for case in cases:
             if case.is_required != case.selected:
                 return False
         return True
