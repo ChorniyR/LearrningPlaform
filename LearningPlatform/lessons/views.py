@@ -27,11 +27,11 @@ class StepDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def post(self, request, lesson_id, id, format=None):
-        step = get_object_or_404(Step, lesson_id=lesson_id, id=id)
-        answer_serializer = AnswerSerializer(data=request.data, context={'request': request})
-        answer_serializer.is_valid(raise_exception=True)
-        stepuser = get_object_or_404(StepUser, user=request.user, step=step)
-        stepuser_serializer = StepUserSerializer(stepuser)
-        return Response(stepuser_serializer.data, status=status.HTTP_201_CREATED)
+    # def post(self, request, lesson_id, id, format=None):
+    #     step = get_object_or_404(Step, lesson_id=lesson_id, id=id)
+    #     answer_serializer = AnswerSerializer(data=request.data, context={'request': request})
+    #     answer_serializer.is_valid(raise_exception=True)
+    #     stepuser = get_object_or_404(StepUser, user=request.user, step=step)
+    #     stepuser_serializer = StepUserSerializer(stepuser)
+    #     return Response(stepuser_serializer.data, status=status.HTTP_201_CREATED)
 
