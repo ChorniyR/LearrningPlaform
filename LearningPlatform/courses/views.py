@@ -33,19 +33,10 @@ class CoursesViewSet(viewsets.ModelViewSet):
     def enroll(self, request, pk=None):
         """
         By this action user can enroll course.
-        If user had already enrolled on any course, action will just add the course in CourseUser table,
-        but if user have never been enrolled on any courses, it will create new instance in CourseUser table.
         """
         course = Course.objects.get(id=pk)
         user = request.user
-        try:
-            instance = CourseUser.objects.get(user=request.user)
-        except CourseUser.DoesNotExist:
-            instance = CourseUser.objects.create()
-            instance.user.add(user)
-            instance.course.add(course)
-        else:
-            instance.course.add(course)
-
-        serializer = CourseUserSerializer(instance)
+        
+        course_user = CourseUser.add_course_to_user(user, course)
+        serializer = CourseUserSerializer(course_user)
         return Response(serializer.data)
