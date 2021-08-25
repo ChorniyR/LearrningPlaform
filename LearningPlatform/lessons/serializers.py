@@ -1,8 +1,8 @@
+from quizzes.models import Test
 from rest_framework import serializers
 
 from .models import Lesson, Step, StepUser
 from quizzes.serializers import TestSerializer
-from quizzes.serializers import TaskSerializer
 
 
 class StepSerializer(serializers.ModelSerializer):
@@ -12,6 +12,8 @@ class StepSerializer(serializers.ModelSerializer):
         model = Step
         fields = ['likes', 'number', 'dislikes', 'title', 'test']
 
+    def create(self, validated_data):
+        return Step(**validated_data)
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,20 +26,16 @@ class StepUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StepUser
-        fields = ['passed', 'score', 'user', 'step', 'feedback',]
+        fields = ['passed', 'score', 'user', 'step', 'feedback', ]
 
 
-class AnswerSerializer(serializers.Serializer):
+class UserAnswerSerializer(serializers.Serializer):
     test = TestSerializer()
     step = StepSerializer(read_only=True)
 
     def update(self, instance, validated_data):
+
         return super().update(instance, validated_data)
 
     def create(self, validated_data):
-        return super().create(validated_data)
-
-    
-
-
-
+        return Test(**self.validated_data)

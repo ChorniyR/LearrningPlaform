@@ -6,7 +6,7 @@ from .models import Test, Task, TaskCase
 class TaskCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = TaskCase
-        fields = ['id', 'definition', 'selected']
+        fields = ['id', 'definition', 'selected', 'task']
 
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -19,7 +19,6 @@ class TaskSerializer(serializers.ModelSerializer):
 
 class TestSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
-
 
     class Meta:
         model = Test

@@ -8,7 +8,8 @@ from lessons.models import Step
 class Test(models.Model):
     description = models.CharField(max_length=1024)
     passed = models.BooleanField()
-    step = models.OneToOneField(Step, on_delete=models.CASCADE, related_name='test')
+    step = models.OneToOneField(
+        Step, on_delete=models.CASCADE, related_name='test')
 
     def is_passed(self, tasks):
         """
@@ -44,12 +45,15 @@ class Test(models.Model):
 
 class Task(models.Model):
     definition = models.CharField(max_length=1024)
-    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='tasks')
+    test = models.ForeignKey(
+        Test, on_delete=models.CASCADE, related_name='tasks')
     passed = models.BooleanField()
 
-    def is_passed(self, cases):
-        for case in cases:
-            if case.is_required != case.selected:
+    @classmethod
+    def is_passed(cls, cases, posted_cases):
+        comparison = zip(cases, posted_cases)
+        for case, posted_case in comparison:
+            if case.is_required != posted_case.selected:
                 return False
         return True
 
@@ -60,8 +64,13 @@ class Task(models.Model):
 class TaskCase(models.Model):
     definition = models.CharField(max_length=1024)
     is_required = models.BooleanField()
-    selected = models.BooleanField(null=True)
-    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name='cases')
+    selected = models.BooleanField(default=False)
+    task = models.ForeignKey(
+        Task, on_delete=models.CASCADE, related_name='cases')
 
     def __str__(self):
         return self.definition
+
+    @classmethod
+    def get_by_task_id(cls, task_id):
+        return cls.objects.filter(task_id=task_id)
