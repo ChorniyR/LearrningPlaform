@@ -1,14 +1,11 @@
-import copy
-from quizzes.models import Task, Test, TaskCase
-
-from django.shortcuts import render, get_object_or_404
-from rest_framework import generics, status
-from rest_framework import permissions
+from django.shortcuts import get_object_or_404, render
+from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Step, Lesson
-from .serializers import LessonSerializer, StepSerializer, UserAnswerSerializer
+from . import parsers
+from .models import Lesson, Step, StepUser
+from .serializers import LessonSerializer, StepSerializer, StepUserSerializer
 
 
 class LessonsDetail(generics.RetrieveAPIView):
@@ -33,27 +30,20 @@ class StepDetail(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def post(self, request, lesson_id, id, format=None):
-        tasks = parse_tasks(request.data)
-        for task in tasks:
-            cases = TaskCase.get_by_task_id(task.id)
-            posted_cases = parse_cases(request.data)
-            task.passed = Task.is_passed(cases, posted_cases)
-        print(tasks[0].passed)
-        
+    def post(self, request, lesson_id, number, format=None):
+        request_test = parsers.parse_test(request.data)
+        request_tasks = parsers.parse_tasks(request.data)
+        posted_cases = parsers.parse_cases(request.data)
 
-def parse_cases(data):
-    cases = []
-    for task in data['test']['tasks']:
-        for kwargs in task.get('cases'):
-            del kwargs['task']
-            cases.append(TaskCase(**kwargs))
-    return cases
+        step = Step.get_by_lesson_id_and_numebr(lesson_id, number)
 
-def parse_tasks(data):
-    test = copy.deepcopy(data['test'])
-    tasks = []
-    for kwargs in test.get('tasks'):
-        del kwargs['cases']
-        tasks.append(Task(**kwargs))
-    return tasks
+        stepuser_instance = StepUser.create_stepuser(
+            user=request.user,
+            step=step,
+            passed=request_test.is_passed(request_tasks, posted_cases),
+            score=request_test.passed_count(
+                request_tasks)*len(request_tasks)*100
+        )
+
+        stepuser_serializer = StepUserSerializer(stepuser_instance)
+        return Response(stepuser_serializer.data, status=status.HTTP_201_CREATED)

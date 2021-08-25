@@ -1,7 +1,6 @@
+import copy
+
 from django.db import models
-
-from courses.models import Course
-
 from lessons.models import Step
 
 
@@ -11,17 +10,20 @@ class Test(models.Model):
     step = models.OneToOneField(
         Step, on_delete=models.CASCADE, related_name='test')
 
-    def is_passed(self, tasks):
+    @staticmethod
+    def is_passed(posted_tasks, posted_cases):
         """
         :returns True If all included task are passed,
-        also False if one task is not passed and if tasks queryset is empty.
+        False if there are not passed tasks.
         """
-        if self.tasks:
-            for task in tasks:
-                if not task.passed:
-                    return False
-            return True
-        return False
+        for task in posted_tasks:
+            cases = TaskCase.get_by_task_id(task.id)
+            task.passed = Task.is_passed(cases, posted_cases)
+
+        for task in posted_tasks:
+            if not task.passed:
+                return False
+        return True
 
     def passed_count(self, tasks):
         """
@@ -33,12 +35,6 @@ class Test(models.Model):
                 count += 1
         return count
 
-    def __len__(self):
-        """
-        :return: quantity of included tasks.
-        """
-        return len(self.tasks.all())
-
     def __str__(self):
         return self.description
 
@@ -49,8 +45,8 @@ class Task(models.Model):
         Test, on_delete=models.CASCADE, related_name='tasks')
     passed = models.BooleanField()
 
-    @classmethod
-    def is_passed(cls, cases, posted_cases):
+    @staticmethod
+    def is_passed(cases, posted_cases):
         comparison = zip(cases, posted_cases)
         for case, posted_case in comparison:
             if case.is_required != posted_case.selected:

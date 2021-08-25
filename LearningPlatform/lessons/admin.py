@@ -5,3 +5,4 @@ from .models import Lesson, Step, StepUser
 
 admin.site.register(Lesson)
 admin.site.register(Step)
+admin.site.register(StepUser)

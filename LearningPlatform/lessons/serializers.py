@@ -10,10 +10,11 @@ class StepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Step
-        fields = ['likes', 'number', 'dislikes', 'title', 'test']
+        fields = ['id', 'likes', 'number', 'dislikes', 'title', 'test']
 
     def create(self, validated_data):
         return Step(**validated_data)
+
 
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
@@ -26,16 +27,4 @@ class StepUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StepUser
-        fields = ['passed', 'score', 'user', 'step', 'feedback', ]
-
-
-class UserAnswerSerializer(serializers.Serializer):
-    test = TestSerializer()
-    step = StepSerializer(read_only=True)
-
-    def update(self, instance, validated_data):
-
-        return super().update(instance, validated_data)
-
-    def create(self, validated_data):
-        return Test(**self.validated_data)
+        fields = ['id', 'passed', 'user', 'step', 'feedback', 'score']
