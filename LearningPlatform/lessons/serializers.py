@@ -20,7 +20,7 @@ class StepSerializer(serializers.ModelSerializer):
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ['title']
+        fields = ['title', 'steps']
 
 
 class StepUserSerializer(serializers.ModelSerializer):
