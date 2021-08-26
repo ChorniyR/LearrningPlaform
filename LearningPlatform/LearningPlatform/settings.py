@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'quizzes.apps.QuizzesConfig',
     'lessons.apps.LessonsConfig',
+    'reading_materials.apps.ReadingMaterialsConfig',
     'rest_framework',
     'rest_framework_simplejwt',
     'djoser',
