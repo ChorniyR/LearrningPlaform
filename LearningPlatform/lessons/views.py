@@ -18,23 +18,26 @@ class LessonsDetail(generics.RetrieveAPIView):
 class StepDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, lesson_id, id, format=None):
+    def get(self, request, lesson_id, number, format=None):
         """
         By this view user can see the detail of current step.
         :lesson_id - id of current course.
         :id - id of current step.
         """
-        step = get_object_or_404(Step, lesson_id=lesson_id, id=id)
+        step = get_object_or_404(Step, lesson_id=lesson_id, number=number)
         if step:
             serializer = StepSerializer(step)
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request, lesson_id, number, format=None):
-        request_test = parsers.parse_test(request.data)
-        request_tasks = parsers.parse_tasks(request.data)
-        posted_cases = parsers.parse_cases(request.data)
-
+        try:
+            request_test = parsers.parse_test(request.data)
+            request_tasks = parsers.parse_tasks(request.data)
+            posted_cases = parsers.parse_cases(request.data)
+        except KeyError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        
         step = Step.get_by_lesson_id_and_numebr(lesson_id, number)
 
         stepuser_instance = StepUser.create_stepuser(
@@ -47,3 +50,5 @@ class StepDetail(APIView):
 
         stepuser_serializer = StepUserSerializer(stepuser_instance)
         return Response(stepuser_serializer.data, status=status.HTTP_201_CREATED)
+
+    
