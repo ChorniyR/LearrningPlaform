@@ -1,23 +1,25 @@
 <template>
-  <Header/>
-  <router-view/>
+  <q-layout view="hHh lpR fFf">
+    <Header />
+    <router-view />
+  </q-layout>
 </template>
 
 <script>
-import { ref } from 'vue'
-import Header from './components/Header.vue'
+import { ref } from "vue";
+import Header from "./components/Header.vue";
 
 export default {
-  name: 'LayoutDefault',
+  name: "LayoutDefault",
 
   components: {
-    Header
+    Header,
   },
 
-  setup () {
+  setup() {
     return {
-      leftDrawerOpen: ref(false)
-    }
-  }
-}
+      leftDrawerOpen: ref(false),
+    };
+  },
+};
 </script>
