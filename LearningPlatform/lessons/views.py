@@ -15,6 +15,21 @@ class LessonsDetail(generics.RetrieveAPIView):
     lookup_field = 'id'
 
 
+class LessonsList(generics.ListAPIView):
+    """
+    ViewList for viewing all lessons of current course.
+    """
+    queryset = Lesson.objects.all()
+    serializer_class = LessonSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    lookup_field = 'pk'
+
+    def filter_queryset(self, queryset):
+        course_id = self.request.path.split('/')[2]
+        queryset.filter(course_id=course_id)
+        return super().filter_queryset(queryset)
+
+
 class StepDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
@@ -37,7 +52,7 @@ class StepDetail(APIView):
             posted_cases = parsers.parse_cases(request.data)
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        
+
         step = Step.get_by_lesson_id_and_numebr(lesson_id, number)
 
         stepuser_instance = StepUser.create_stepuser(
@@ -50,5 +65,3 @@ class StepDetail(APIView):
 
         stepuser_serializer = StepUserSerializer(stepuser_instance)
         return Response(stepuser_serializer.data, status=status.HTTP_201_CREATED)
-
-    
