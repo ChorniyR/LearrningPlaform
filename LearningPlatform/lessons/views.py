@@ -33,7 +33,7 @@ class LessonsList(generics.ListAPIView):
 class StepDetail(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    def get(self, request, lesson_id, number, format=None):
+    def get(self, request, pk, lesson_id, number, format=None):
         """
         By this view user can see the detail of current step.
         :lesson_id - id of current course.
