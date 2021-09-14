@@ -23,7 +23,7 @@ class Step(models.Model):
         Lesson, on_delete=models.CASCADE, related_name='steps')
 
     @classmethod
-    def get_by_lesson_id_and_numebr(cls, lesson_id, number):
+    def get_by_lesson_id_and_number(cls, lesson_id, number):
         return cls.objects.filter(lesson=lesson_id).filter(number=number).first()
 
     def __str__(self):
@@ -55,6 +55,10 @@ class StepUser(models.Model):
         instance.user.add(user)
         instance.step.add(step.id)
         return instance
+
+    @classmethod
+    def find_by_step(cls, step):
+        return cls.objects.filter(step=step).first()
 
     @staticmethod
     def _get_feedback(passed):

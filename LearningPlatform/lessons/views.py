@@ -37,13 +37,15 @@ class StepDetail(APIView):
         """
         By this view user can see the detail of current step.
         :lesson_id - id of current course.
-        :id - id of current step.
+        :pk - pk of current step.
         """
         step = get_object_or_404(Step, lesson_id=lesson_id, number=number)
-        if step:
-            serializer = StepSerializer(step)
+        step_user = StepUser.find_by_step(step)
+        if step_user:
+            serializer = StepUserSerializer(step_user)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serializer = StepSerializer(step)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, lesson_id, number, format=None):
         try:
@@ -53,7 +55,7 @@ class StepDetail(APIView):
         except KeyError:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
-        step = Step.get_by_lesson_id_and_numebr(lesson_id, number)
+        step = Step.get_by_lesson_id_and_number(lesson_id, number)
 
         stepuser_instance = StepUser.create_stepuser(
             user=request.user,
