@@ -20,5 +20,5 @@ As backend:
   <li>Python</li>
   <li>Django</li>
   <li>Django rest framework</li>
-  <li>Postgesql</li>
+  <li>Postgresql</li>
 </ul>
